@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ nft.name }}{% endblock %}
+
+{% block content %}
+
+    <header>
+        <div class="logo">
+            <div class="logo__text"><p>NFT {{ nft.name }}</p></div>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="nft_detail">
+            <img src="{{ nft.image.url }}">
+            <div class="nft_info">
+                <p class="price">{{ last_price }}</p>
+                <p class="description">{{ nft.description }}</p>
+            </div>
+        </div>
+
+        <div class="graph">
+
+            <canvas id="myChart" width="400" height="400"></canvas>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: JSON.parse('{{ dates|safe }}'),
+                    datasets: [{
+                        label: 'Price NFT',
+                        data: JSON.parse('{{ prices|safe }}').map(Number),
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false,
+                                padding: 10
+                            },
+                            gridLines: {
+                                display: true
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: 20
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontSize: 14
+                        }
+                    }
+                }
+            });
+            </script>
+        </div>
+    </div>
+{% endblock %}
